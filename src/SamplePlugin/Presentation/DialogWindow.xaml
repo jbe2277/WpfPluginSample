@@ -1,0 +1,24 @@
+﻿<Window x:Class="WpfPluginSample.SamplePlugin.Presentation.DialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:app="clr-namespace:WpfPluginSample.SamplePlugin.Applications"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance app:DialogViewModel}"
+        Title="Dialog Window" Height="250" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label>A dialog window.</Label>
+
+        <Border Grid.Row="1" Background="{x:Static SystemColors.ControlBrush}">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="11">
+                <Button Command="{Binding OkCommand}" Content="_OK" Width="75"/>
+                <Button Command="{Binding CancelCommand}" Content="_Cancel" Width="75" Margin="11,0,0,0"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

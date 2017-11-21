@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="WpfPluginSample.SamplePlugin.Presentation.SampleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:app="clr-namespace:WpfPluginSample.SamplePlugin.Applications"
+             xmlns:p="clr-namespace:WpfPluginSample.SamplePlugin.Properties"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance app:SampleViewModel}"
+             d:DesignHeight="500" d:DesignWidth="400">
+    <Grid Margin="3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="7"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="7"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="7"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="7"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="7"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="22"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="7"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="7"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="7"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="7"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="7"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Label Grid.Column="0" Grid.Row="0" Content="Sample Plugin" FontWeight="SemiBold"/>
+
+        <Label Grid.Column="0" Grid.Row="2" Content="Localized text:"/>
+        <Label Grid.Column="2" Grid.Row="2" Content="{x:Static p:Resources.HelloWorld}"/>
+        
+        <Label Grid.Column="0" Grid.Row="4" Content="Application setting:"/>
+        <Label Grid.Column="2" Grid.Row="4" Content="{Binding TestApplicationSetting}"/>
+        
+        <Label Grid.Column="0" Grid.Row="6" Content="Last Task update:"/>
+        <Label Grid.Column="2" Grid.Row="6" Content="{Binding TaskSubject}"/>
+        
+        <Label Grid.Column="0" Grid.Row="8" Content="WPF Window:"/>
+        <Button Grid.Column="2" Grid.Row="8" Command="{Binding ShowDialogCommand}" Content="Show dialog" Width="200" Height="23" HorizontalAlignment="Left"/>
+
+        <Label Grid.Column="0" Grid.Row="10" Content="Stability tests" FontWeight="SemiBold"/>
+        <Button Grid.Column="2" Grid.Row="12" Command="{Binding BlockUIThreadCommand}" Content="Block UI thread" Width="200" Height="23" HorizontalAlignment="Left"/>
+        <Button Grid.Column="2" Grid.Row="14" Command="{Binding ExceptionUIThreadCommand}" Content="Exception on UI thread" Width="200" Height="23" HorizontalAlignment="Left"/>
+        <Button Grid.Column="2" Grid.Row="16" Command="{Binding ExceptionBackgroundThreadCommand}" Content="Exception on background thread" Width="200" Height="23" HorizontalAlignment="Left"/>
+        <Button Grid.Column="2" Grid.Row="18" Command="{Binding ExceptionTaskCommand}" Content="Exception on task" Width="200" Height="23" HorizontalAlignment="Left"/>
+        <Button Grid.Column="2" Grid.Row="20" Command="{Binding RunGarbageCollectorCommand}" Content="Run garbage collector" Width="200" Height="23" HorizontalAlignment="Left"/>
+    </Grid>
+</UserControl>

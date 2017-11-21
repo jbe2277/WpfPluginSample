@@ -1,0 +1,45 @@
+﻿<Window x:Class="WpfPluginSample.Shell.Presentation.Views.ShellWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:vm="clr-namespace:WpfPluginSample.Shell.Applications.ViewModels"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance {x:Type vm:ShellViewModel}}"
+        Title="WPF Plugin Sample" Height="600" Width="900">
+    <DockPanel>
+        <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" BorderBrush="{StaticResource DarkBorderBrush}" Height="120">
+            <ContentPresenter Content="{Binding LogView}"/>
+        </Border>
+
+        <Border DockPanel.Dock="Left" BorderThickness="0,1,0,0" BorderBrush="{StaticResource DarkBorderBrush}" Width="250">
+            <StackPanel>
+                <TextBlock Text="Discovered Plugins" FontWeight="SemiBold" Margin="5,5,5,0"/>
+                <ListBox ItemsSource="{Binding Plugins}" SelectedItem="{Binding SelectedPlugin}" Height="200" Margin="3">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0,0,0,11">
+                                <TextBlock Text="{Binding Name}"/>
+                                <TextBlock Text="{Binding Version}"/>
+                                <TextBlock Text="{Binding Company}"/>
+                                <TextBlock Text="{Binding Copyright}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Button Command="{Binding LoadCommand}" Content="Load" Margin="3,11,3,0"/>
+                <Button Command="{Binding UnloadCommand}" Content="Unload" Margin="3,11,3,0"/>
+            </StackPanel>
+        </Border>
+
+        <Border DockPanel.Dock="Left" BorderThickness="1,1,0,0" BorderBrush="{StaticResource DarkBorderBrush}" Width="250">
+            <ContentPresenter Content="{Binding TaskView}"/>
+        </Border>
+
+        <Border BorderThickness="3" BorderBrush="{StaticResource DarkBorderBrush}">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="Plugin View" Padding="3" Background="{StaticResource DarkBorderBrush}"/>
+                <ContentPresenter Content="{Binding RemoteView}"/>
+            </DockPanel>
+        </Border>
+    </DockPanel>
+</Window>

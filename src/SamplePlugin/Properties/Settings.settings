@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SamplePlugin.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TestSetting" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">My test settings</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
