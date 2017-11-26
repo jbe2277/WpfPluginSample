@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Waf.Applications;
 using WpfPluginSample.PluginFramework;
 using WpfPluginSample.Shell.Applications.RemoteServices;
@@ -37,8 +39,8 @@ namespace WpfPluginSample.Shell.Applications.Controllers
             this.eventAggregator = eventAggregator;
             pluginManager = new PluginManager();
             plugins = new ObservableCollection<PluginInfo>();
-            loadCommand = new DelegateCommand(Load);
-            unloadCommand = new DelegateCommand(Unload);
+            loadCommand = new DelegateCommand(Load, CanLoad);
+            unloadCommand = new DelegateCommand(Unload, CanUnload);
             updateTaskCommand = new DelegateCommand(UpdateTask);
         }
 
@@ -61,6 +63,7 @@ namespace WpfPluginSample.Shell.Applications.Controllers
             ShellViewModel.LogView = LogViewModel.View;
             ShellViewModel.TaskView = TaskViewModel.View;
             TaskViewModel.UpdateTaskCommand = updateTaskCommand;
+            ShellViewModel.PropertyChanged += ShellViewModelPropertyChanged;
         }
 
         public void Run()
@@ -81,12 +84,22 @@ namespace WpfPluginSample.Shell.Applications.Controllers
             {
                 plugins.Add(plugin);
             }
+            ShellViewModel.SelectedPlugin = plugins.FirstOrDefault();
+        }
+
+        private bool CanLoad()
+        {
+            return ShellViewModel.SelectedPlugin != null;
         }
 
         private void Load()
         {
-            // TODO: Crash when SelectedPlugin == null
             ShellViewModel.RemoteView = pluginManager.Load(ShellViewModel.SelectedPlugin);
+        }
+
+        private bool CanUnload()
+        {
+            return ShellViewModel.SelectedPlugin != null;
         }
 
         private void Unload()
@@ -97,6 +110,15 @@ namespace WpfPluginSample.Shell.Applications.Controllers
         private void UpdateTask()
         {
             eventAggregator.Value.Publish(new TaskChangedEventArgs(TaskViewModel.Subject, TaskViewModel.AssignedTo));
+        }
+
+        private void ShellViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ShellViewModel.SelectedPlugin))
+            {
+                loadCommand.RaiseCanExecuteChanged();
+                unloadCommand.RaiseCanExecuteChanged();
+            }
         }
     }
 }
