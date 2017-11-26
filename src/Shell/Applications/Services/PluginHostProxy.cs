@@ -38,7 +38,7 @@ namespace WpfPluginSample.Shell.Applications.Services
             var processInfo = new ProcessStartInfo
             {
                 Arguments = new TypedArgs(parentProcessId, PluginInfo.AssemblyFile, instanceName).ToArgs(),
-                // CreateNoWindow = true, TODO: Remove this
+                CreateNoWindow = true, // Note: The command window might be helpful to search for errors.
                 UseShellExecute = false,
                 FileName = "PluginHost.exe",
                 WorkingDirectory = Path.GetDirectoryName(PluginInfo.AssemblyFile)
