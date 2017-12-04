@@ -25,6 +25,8 @@ namespace WpfPluginSample.Shell.Applications.Services
 
         public object RemoteView { get; private set; }
 
+        public event EventHandler Disposed;
+
         public static PluginHostProxy LoadPlugin(PluginInfo pluginInfo)
         {
             int parentProcessId = Process.GetCurrentProcess().Id;
@@ -46,7 +48,9 @@ namespace WpfPluginSample.Shell.Applications.Services
 
             using (var readyEvent = new EventWaitHandle(false, EventResetMode.ManualReset, instanceName + ".Ready"))
             {
-                Process.Start(processInfo);
+                var pluginProcess = Process.Start(processInfo);
+                pluginProcess.EnableRaisingEvents = true;
+                pluginProcess.Exited += PluginProcessExited;
                 if (!readyEvent.WaitOne(3000))
                 {
                     throw new InvalidOperationException("Plugin host process not ready.");
@@ -60,19 +64,21 @@ namespace WpfPluginSample.Shell.Applications.Services
             RemoteView = FrameworkElementAdapters.ContractToViewAdapter(contract);
         }
 
-        public void UnloadPlugin()
+        private void PluginProcessExited(object sender, EventArgs e)
         {
-            pluginLoader.Shutdown();
-            pluginLoader = null;
+            Dispose();
         }
 
         protected override void DisposeCore(bool isDisposing)
         {
             if (isDisposing)
             {
-                pluginLoader?.Shutdown();
+                var loader = pluginLoader;
+                pluginLoader = null;
+                loader?.Shutdown();
             }
             base.DisposeCore(isDisposing);
+            Disposed?.Invoke(this, EventArgs.Empty);
         }
     }
 }

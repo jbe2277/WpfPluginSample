@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +16,9 @@ namespace WpfPluginSample.Shell.Applications.Services
         {
             pluginHostProxies = new List<PluginHostProxy>();
         }
-        
+
+        public event EventHandler<PluginUnloadedEventArgs> PluginUnloaded;
+
         public static async Task<IReadOnlyList<PluginInfo>> DiscoverAsync()
         {
             var plugingPath = Path.Combine(ApplicationInfo.ApplicationPath, "Plugins");
@@ -27,15 +30,21 @@ namespace WpfPluginSample.Shell.Applications.Services
         public object Load(PluginInfo pluginInfo)
         {
             var pluginHostProxy = PluginHostProxy.LoadPlugin(pluginInfo);
+            pluginHostProxy.Disposed += PluginHostProxyDisposed;
             pluginHostProxies.Add(pluginHostProxy);
             return pluginHostProxy.RemoteView;
         }
-
+        
         public void Unload(object pluginView)
         {
             var pluginHostProxy = pluginHostProxies.Single(x => x.RemoteView == pluginView);
-            pluginHostProxy.UnloadPlugin();
+            pluginHostProxy.Dispose();
             pluginHostProxies.Remove(pluginHostProxy);
+        }
+
+        private void PluginHostProxyDisposed(object sender, EventArgs e)
+        {
+            PluginUnloaded?.Invoke(this, new PluginUnloadedEventArgs(((PluginHostProxy)sender).RemoteView));
         }
 
         protected override void DisposeCore(bool isDisposing)
@@ -44,9 +53,19 @@ namespace WpfPluginSample.Shell.Applications.Services
             {
                 var proxies = pluginHostProxies.ToList();
                 pluginHostProxies.Clear();
-                proxies.ForEach(x => x.UnloadPlugin());
+                proxies.ForEach(x => x.Dispose());
             }
             base.DisposeCore(isDisposing);
         }
+    }
+
+    public sealed class PluginUnloadedEventArgs
+    {
+        public PluginUnloadedEventArgs(object pluginView)
+        {
+            PluginView = pluginView;
+        }
+
+        public object PluginView { get; }
     }
 }

@@ -3,11 +3,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Waf.Applications;
 using WpfPluginSample.PluginFramework;
 using WpfPluginSample.Shell.Applications.RemoteServices;
 using WpfPluginSample.Shell.Applications.Services;
 using WpfPluginSample.Shell.Applications.ViewModels;
+using WpfPluginSample.Shell.Foundation;
 using WpfPluginSample.Shell.Interfaces;
 
 namespace WpfPluginSample.Shell.Applications.Controllers
@@ -15,6 +17,7 @@ namespace WpfPluginSample.Shell.Applications.Controllers
     [Export(typeof(IModuleController))]
     internal class ModuleController : IModuleController
     {
+        private readonly TaskScheduler taskScheduler;
         private readonly Lazy<ShellViewModel> shellViewModel;
         private readonly Lazy<LogViewModel> logViewModel;
         private readonly Lazy<TaskViewModel> taskViewModel;
@@ -32,6 +35,7 @@ namespace WpfPluginSample.Shell.Applications.Controllers
         public ModuleController(Lazy<ShellViewModel> shellViewModel, Lazy<LogViewModel> logViewModel, Lazy<TaskViewModel> taskViewModel, 
             Lazy<LogService> logService, Lazy<AddressBookService> addressBookService, Lazy<IEventAggregator> eventAggregator)
         {
+            taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             this.shellViewModel = shellViewModel;
             this.logViewModel = logViewModel;
             this.taskViewModel = taskViewModel;
@@ -39,6 +43,7 @@ namespace WpfPluginSample.Shell.Applications.Controllers
             this.addressBookService = addressBookService;
             this.eventAggregator = eventAggregator;
             pluginManager = new PluginManager();
+            pluginManager.PluginUnloaded += PluginUnloaded;
             plugins = new ObservableCollection<PluginInfo>();
             pluginViews = new ObservableCollection<object>();
             loadCommand = new DelegateCommand(Load, CanLoad);
@@ -109,9 +114,12 @@ namespace WpfPluginSample.Shell.Applications.Controllers
 
         private void Unload()
         {
-            var viewToRemove = ShellViewModel.SelectedPluginView;
-            pluginManager.Unload(viewToRemove);
-            pluginViews.Remove(viewToRemove);
+            pluginManager.Unload(ShellViewModel.SelectedPluginView);
+        }
+
+        private void PluginUnloaded(object sender, PluginUnloadedEventArgs e)
+        {
+            TaskHelper.Run(() => pluginViews.Remove(e.PluginView), taskScheduler);
         }
 
         private void UpdateTask()
