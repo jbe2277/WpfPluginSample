@@ -24,7 +24,14 @@ namespace WpfPluginSample.Shell.Applications.RemoteServices
             object subject;
             if (subjects.TryGetValue(typeof(TEvent), out subject))
             {
-                ((ISubject<TEvent>)subject).OnNext(sampleEvent);
+                try
+                {
+                    ((ISubject<TEvent>)subject).OnNext(sampleEvent);
+                }
+                catch (Exception)
+                {
+                    // This can happen when a Plugin did not unsubscribe from the event.
+                }
             }
         }
     }

@@ -19,6 +19,7 @@ namespace WpfPluginSample.SamplePlugin.Applications
         private readonly DelegateCommand exceptionBackgroundThreadCommand;
         private readonly DelegateCommand exceptionTaskCommand;
         private readonly DelegateCommand runGarbageCollectorCommand;
+        private IDisposable taskChangedHandlerObserver;
 
         public SampleController(ILogService logService, IEventAggregator eventAggregator, SampleViewModel sampleViewModel, Func<DialogViewModel> dialogViewModelFactory)
         {
@@ -36,7 +37,7 @@ namespace WpfPluginSample.SamplePlugin.Applications
         
         public void Initialize()
         {
-            eventAggregator.GetEvent<TaskChangedEventArgs>().ObserveOnDispatcher().Subscribe(TaskChangedHandler);
+            taskChangedHandlerObserver = eventAggregator.GetEvent<TaskChangedEventArgs>().ObserveOnDispatcher().Subscribe(TaskChangedHandler);
             sampleViewModel.ShowDialogCommand = showDialogCommand;
             sampleViewModel.BlockUIThreadCommand = blockUIThreadCommand;
             sampleViewModel.ExceptionUIThreadCommand = exceptionUIThreadCommand;
@@ -47,6 +48,7 @@ namespace WpfPluginSample.SamplePlugin.Applications
 
         public void Shutdown()
         {
+            taskChangedHandlerObserver.Dispose();
         }
 
         private void TaskChangedHandler(TaskChangedEventArgs e)
