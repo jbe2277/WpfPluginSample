@@ -6,6 +6,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Presentation/Resources/BrushResources.xaml"/>
                 <ResourceDictionary Source="Presentation/Resources/LayoutResources.xaml"/>
+                <ResourceDictionary Source="Presentation/Resources/ConverterResources.xaml"/>
                 <ResourceDictionary Source="Presentation/Resources/ControlResources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
          </ResourceDictionary>

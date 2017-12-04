@@ -10,9 +10,8 @@ namespace WpfPluginSample.Shell.Applications.ViewModels
     [Export]
     public class ShellViewModel : ViewModel<IShellView>
     {
-        private IReadOnlyList<PluginInfo> plugins;
         private PluginInfo selectedPlugin;
-        private object remoteView;
+        private object selectedPluginView;
 
         [ImportingConstructor]
         public ShellViewModel(IShellView view) : base(view)
@@ -23,22 +22,20 @@ namespace WpfPluginSample.Shell.Applications.ViewModels
 
         public ICommand UnloadCommand { get; set; }
 
-        public IReadOnlyList<PluginInfo> Plugins
-        {
-            get { return plugins; }
-            set { SetProperty(ref plugins, value); }
-        }
-
+        public IReadOnlyList<PluginInfo> Plugins { get; set; }
+        
         public PluginInfo SelectedPlugin 
         {
             get { return selectedPlugin; }
             set { SetProperty(ref selectedPlugin, value); }
         }
 
-        public object RemoteView
+        public IReadOnlyList<object> PluginViews { get; set; }
+
+        public object SelectedPluginView
         {
-            get { return remoteView; }
-            set { SetProperty(ref remoteView, value); }
+            get { return selectedPluginView; }
+            set { SetProperty(ref selectedPluginView, value); }
         }
         
         public object LogView { get; set; }

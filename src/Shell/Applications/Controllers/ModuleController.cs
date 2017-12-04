@@ -23,6 +23,7 @@ namespace WpfPluginSample.Shell.Applications.Controllers
         private readonly Lazy<IEventAggregator> eventAggregator;
         private readonly PluginManager pluginManager;
         private readonly ObservableCollection<PluginInfo> plugins;
+        private readonly ObservableCollection<object> pluginViews;
         private readonly DelegateCommand loadCommand;
         private readonly DelegateCommand unloadCommand;
         private readonly DelegateCommand updateTaskCommand;
@@ -39,6 +40,7 @@ namespace WpfPluginSample.Shell.Applications.Controllers
             this.eventAggregator = eventAggregator;
             pluginManager = new PluginManager();
             plugins = new ObservableCollection<PluginInfo>();
+            pluginViews = new ObservableCollection<object>();
             loadCommand = new DelegateCommand(Load, CanLoad);
             unloadCommand = new DelegateCommand(Unload, CanUnload);
             updateTaskCommand = new DelegateCommand(UpdateTask);
@@ -58,6 +60,7 @@ namespace WpfPluginSample.Shell.Applications.Controllers
             RemoteServiceLocator.RegisterInstance<IEventAggregator>((MarshalByRefObject)eventAggregator.Value);
             
             ShellViewModel.Plugins = plugins;
+            ShellViewModel.PluginViews = pluginViews;
             ShellViewModel.LoadCommand = loadCommand;
             ShellViewModel.UnloadCommand = unloadCommand;
             ShellViewModel.LogView = LogViewModel.View;
@@ -79,7 +82,7 @@ namespace WpfPluginSample.Shell.Applications.Controllers
 
         private async void Discover()
         {
-            var newPlugins = await pluginManager.DiscoverAsync();
+            var newPlugins = await PluginManager.DiscoverAsync();
             foreach (var plugin in newPlugins)
             {
                 plugins.Add(plugin);
@@ -94,17 +97,21 @@ namespace WpfPluginSample.Shell.Applications.Controllers
 
         private void Load()
         {
-            ShellViewModel.RemoteView = pluginManager.Load(ShellViewModel.SelectedPlugin);
+            var newPluginView = pluginManager.Load(ShellViewModel.SelectedPlugin);
+            pluginViews.Add(newPluginView);
+            ShellViewModel.SelectedPluginView = newPluginView;
         }
 
         private bool CanUnload()
         {
-            return ShellViewModel.SelectedPlugin != null;
+            return ShellViewModel.SelectedPluginView != null;
         }
 
         private void Unload()
         {
-            pluginManager.Unload(ShellViewModel.SelectedPlugin);
+            var viewToRemove = ShellViewModel.SelectedPluginView;
+            pluginManager.Unload(viewToRemove);
+            pluginViews.Remove(viewToRemove);
         }
 
         private void UpdateTask()
@@ -117,6 +124,9 @@ namespace WpfPluginSample.Shell.Applications.Controllers
             if (e.PropertyName == nameof(ShellViewModel.SelectedPlugin))
             {
                 loadCommand.RaiseCanExecuteChanged();
+            }
+            else if (e.PropertyName == nameof(ShellViewModel.SelectedPluginView))
+            {
                 unloadCommand.RaiseCanExecuteChanged();
             }
         }

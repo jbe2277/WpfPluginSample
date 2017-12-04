@@ -6,15 +6,16 @@
         xmlns:vm="clr-namespace:WpfPluginSample.Shell.Applications.ViewModels"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance {x:Type vm:ShellViewModel}}"
         Title="WPF Plugin Sample" Height="600" Width="900">
-    <DockPanel>
+    <DockPanel x:Name="rootContainer">
         <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" BorderBrush="{StaticResource DarkBorderBrush}" Height="120">
             <ContentPresenter Content="{Binding LogView}"/>
         </Border>
 
         <Border DockPanel.Dock="Left" BorderThickness="0,1,0,0" BorderBrush="{StaticResource DarkBorderBrush}" Width="250">
-            <StackPanel>
-                <TextBlock Text="Discovered Plugins" FontWeight="SemiBold" Margin="5,5,5,0"/>
-                <ListBox ItemsSource="{Binding Plugins}" SelectedItem="{Binding SelectedPlugin}" Height="200" Margin="3">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="Discovered Plugins" FontWeight="SemiBold" Margin="5,5,5,0"/>
+                <Button DockPanel.Dock="Bottom" Command="{Binding LoadCommand}" Content="Load" Height="24" Width="150" Margin="11"/>
+                <ListBox ItemsSource="{Binding Plugins}" SelectedItem="{Binding SelectedPlugin}" Margin="3">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Margin="0,0,0,11">
@@ -26,9 +27,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Button Command="{Binding LoadCommand}" Content="Load" Margin="3,11,3,0"/>
-                <Button Command="{Binding UnloadCommand}" Content="Unload" Margin="3,11,3,0"/>
-            </StackPanel>
+            </DockPanel>
         </Border>
 
         <Border DockPanel.Dock="Left" BorderThickness="1,1,0,0" BorderBrush="{StaticResource DarkBorderBrush}" Width="250">
@@ -37,8 +36,26 @@
 
         <Border BorderThickness="3" BorderBrush="{StaticResource DarkBorderBrush}">
             <DockPanel>
-                <TextBlock DockPanel.Dock="Top" Text="Plugin View" Padding="3" Background="{StaticResource DarkBorderBrush}"/>
-                <ContentPresenter Content="{Binding RemoteView}"/>
+                <TabControl Grid.Row="1" ItemsSource="{Binding PluginViews}" SelectedItem="{Binding SelectedPluginView}" Margin="0,2,0,0" Padding="0" BorderThickness="0,1,0,0">
+                    <TabControl.ItemContainerStyle>
+                        <Style TargetType="TabItem">
+                            <Setter Property="HeaderTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="Plugin" Margin="3,0,7,0"/>
+                                            <Button Command="{Binding DataContext.UnloadCommand, ElementName=rootContainer}"
+                                                    Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabItem}}, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                    Width="16" Height="16" Margin="0,1,0,0" Background="Transparent" BorderBrush="Transparent">
+                                                <Path Data="M 0,0 L 7,7 M 7,0 L 0,7" StrokeThickness="2" Stroke="Gray"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TabControl.ItemContainerStyle>
+                </TabControl>
             </DockPanel>
         </Border>
     </DockPanel>

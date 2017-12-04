@@ -16,7 +16,7 @@ namespace WpfPluginSample.Shell.Applications.Services
             pluginHostProxies = new List<PluginHostProxy>();
         }
         
-        public async Task<IReadOnlyList<PluginInfo>> DiscoverAsync()
+        public static async Task<IReadOnlyList<PluginInfo>> DiscoverAsync()
         {
             var plugingPath = Path.Combine(ApplicationInfo.ApplicationPath, "Plugins");
             var dllFiles = Directory.GetFiles(plugingPath, "*.dll", SearchOption.AllDirectories);
@@ -31,14 +31,11 @@ namespace WpfPluginSample.Shell.Applications.Services
             return pluginHostProxy.RemoteView;
         }
 
-        public void Unload(PluginInfo pluginInfo)
+        public void Unload(object pluginView)
         {
-            var pluginHostProxy = pluginHostProxies.FirstOrDefault(x => x.PluginInfo == pluginInfo);
-            if (pluginHostProxy != null)
-            {
-                pluginHostProxy.UnloadPlugin();
-                pluginHostProxies.Remove(pluginHostProxy);
-            }
+            var pluginHostProxy = pluginHostProxies.Single(x => x.RemoteView == pluginView);
+            pluginHostProxy.UnloadPlugin();
+            pluginHostProxies.Remove(pluginHostProxy);
         }
 
         protected override void DisposeCore(bool isDisposing)
