@@ -7,7 +7,7 @@
              mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:LogViewModel}" d:DesignHeight="150" d:DesignWidth="600">
 
     <RichTextBox x:Name="outputBox" IsReadOnly="True" FontFamily="Consolas" FontSize="9pt" BorderThickness="0" VerticalScrollBarVisibility="Visible"
-                        TextOptions.TextFormattingMode="Display">
+                        TextOptions.TextFormattingMode="Display" Background="{StaticResource LightBackground}">
         <FlowDocument x:Name="outputDocument">
             <Paragraph x:Name="outputParagraph"/>
         </FlowDocument>

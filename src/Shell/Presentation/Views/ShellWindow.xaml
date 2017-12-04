@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:vm="clr-namespace:WpfPluginSample.Shell.Applications.ViewModels"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance {x:Type vm:ShellViewModel}}"
-        Title="WPF Plugin Sample" Height="600" Width="900">
+        Title="WPF Plugin Sample" Height="600" Width="900" Background="{StaticResource LightBackground}">
     <DockPanel x:Name="rootContainer">
         <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" BorderBrush="{StaticResource DarkBorderBrush}" Height="120">
             <ContentPresenter Content="{Binding LogView}"/>
@@ -15,7 +15,7 @@
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="Discovered Plugins" FontWeight="SemiBold" Margin="5,5,5,0"/>
                 <Button DockPanel.Dock="Bottom" Command="{Binding LoadCommand}" Content="Load" Height="24" Width="150" Margin="11"/>
-                <ListBox ItemsSource="{Binding Plugins}" SelectedItem="{Binding SelectedPlugin}" Margin="3">
+                <ListBox x:Name="pluginsBox" ItemsSource="{Binding Plugins}" SelectedItem="{Binding SelectedPlugin}" Margin="3">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Margin="0,0,0,11">
@@ -34,9 +34,9 @@
             <ContentPresenter Content="{Binding TaskView}"/>
         </Border>
 
-        <Border BorderThickness="3" BorderBrush="{StaticResource DarkBorderBrush}">
+        <Border BorderThickness="1,1,1,0" BorderBrush="{StaticResource DarkBorderBrush}">
             <DockPanel>
-                <TabControl Grid.Row="1" ItemsSource="{Binding PluginViews}" SelectedItem="{Binding SelectedPluginView}" Margin="0,2,0,0" Padding="0" BorderThickness="0,1,0,0">
+                <TabControl Grid.Row="1" ItemsSource="{Binding PluginViews}" SelectedItem="{Binding SelectedPluginView}" Margin="0" Padding="0" BorderThickness="0,1,0,0">
                     <TabControl.ItemContainerStyle>
                         <Style TargetType="TabItem">
                             <Setter Property="HeaderTemplate">

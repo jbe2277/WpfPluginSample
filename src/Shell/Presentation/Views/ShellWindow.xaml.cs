@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using System.Windows;
 using WpfPluginSample.Shell.Applications.Views;
 
 namespace WpfPluginSample.Shell.Presentation.Views
@@ -9,6 +10,12 @@ namespace WpfPluginSample.Shell.Presentation.Views
         public ShellWindow()
         {
             InitializeComponent();
+            Loaded += LoadedHandler;
+        }
+
+        private void LoadedHandler(object sender, RoutedEventArgs e)
+        {
+            pluginsBox.Focus();
         }
     }
 }
