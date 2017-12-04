@@ -51,6 +51,7 @@
     <Compile Include="Applications\SampleDataProvider.cs" />
     <Compile Include="Domain\AddressBookRoot.cs" />
     <Compile Include="Domain\Contact.cs" />
+    <Compile Include="LogServiceExtensions.cs" />
     <Compile Include="PluginController.cs" />
     <Compile Include="Presentation\ContactListView.xaml.cs">
       <DependentUpon>ContactListView.xaml</DependentUpon>

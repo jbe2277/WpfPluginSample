@@ -15,7 +15,7 @@ namespace WpfPluginSample.AddressBookPlugin
         {
             logService = RemoteServiceLocator.GetService<ILogService>();
             addressBookService = RemoteServiceLocator.GetService<IAddressBookService>();
-            logService.Message("AddressBookPlugin: Initialize");
+            logService.Message("Initialize", true);
         }
 
         public object CreateMainView()
@@ -28,7 +28,7 @@ namespace WpfPluginSample.AddressBookPlugin
 
         public void Shutdown()
         {
-            logService.Message("AddressBookPlugin: Shutdown");
+            logService.Message("Shutdown", true);
             contactController.Shutdown();
         }
     }

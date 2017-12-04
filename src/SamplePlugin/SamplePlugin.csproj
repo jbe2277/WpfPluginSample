@@ -72,6 +72,7 @@
     <Compile Include="Applications\ISampleView.cs" />
     <Compile Include="Applications\SampleController.cs" />
     <Compile Include="Applications\SampleViewModel.cs" />
+    <Compile Include="LogServiceExtensions.cs" />
     <Compile Include="PluginController.cs" />
     <Compile Include="Presentation\DialogWindow.xaml.cs">
       <DependentUpon>DialogWindow.xaml</DependentUpon>

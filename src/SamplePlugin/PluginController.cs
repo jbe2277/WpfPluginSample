@@ -18,10 +18,10 @@ namespace WpfPluginSample.SamplePlugin
         {
             logService = RemoteServiceLocator.GetService<ILogService>();
             eventAggregator = RemoteServiceLocator.GetService<IEventAggregator>();
-            logService.Message("SamplePlugin: Initialize");
+            logService.Message("Initialize", true);
 
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("de-DE");
-            logService.Message("SamplePlugin: UICulture " + Thread.CurrentThread.CurrentUICulture);
+            logService.Message("UICulture " + Thread.CurrentThread.CurrentUICulture, true);
         }
 
         public object CreateMainView()
@@ -34,7 +34,7 @@ namespace WpfPluginSample.SamplePlugin
 
         public void Shutdown()
         {
-            logService.Message("SamplePlugin: Shutdown");
+            logService.Message("Shutdown", true);
             sampleController.Shutdown();
         }
     }

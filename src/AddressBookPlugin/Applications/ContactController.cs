@@ -44,7 +44,7 @@ namespace WpfPluginSample.AddressBookPlugin.Applications
 
         private void SelectContact()
         {
-            logService.Message("AddressBookPlugin: Select contact");
+            logService.Message("Select contact", true);
             addressBookService.SelectContact(GetDto(viewModel.SelectedContact));
         }
 
@@ -57,7 +57,7 @@ namespace WpfPluginSample.AddressBookPlugin.Applications
         {
             var contactToDelete = viewModel.SelectedContact;
             root.RemoveContact(contactToDelete);
-            logService.Message("AddressBookPlugin: Delete contact");
+            logService.Message("Delete contact", true);
             addressBookService.ContactDeleted(GetDto(contactToDelete));
         }
 
